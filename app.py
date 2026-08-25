@@ -42,4 +42,36 @@ def fetch_alerts_data():
     return alert_df
 
 try:
+    alert_df = fetch_alerts_data()
+except Exception as e:
+    st.error(f"Failed to connect to database: {e}")
+    st.stop()
+
+col_header, col_refresh = st.columns([4, 1])
+with col_header:
+    st.caption(f"Last database sync: {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}")
+with col_refresh:
+    if st.button("🔄 Sync Live Data"):  # Fixed: Added missing colon
+        st.rerun()
+
+col1, col2 = st.columns(2)
+
+with col1:
+    st.subheader("🔥 Peak Asset Activity Tracking")
+    heatmap_data = alert_df.groupby(["day", "hour"])["device_id"].nunique().reset_index()
+    heatmap_data.columns = ["day", "hour", "unique_devices"]
     
+    fig_heatmap = px.density_heatmap(
+        heatmap_data,
+        x="hour",
+        y="day",
+        z="unique_devices",
+        title="Active Hours Heatmap Matrix",
+        labels={'hour': 'Hour of Day (24h)', 'day': 'Day of Week', 'unique_devices': 'Active Assets'}, # Fixed label mapping
+        color_continuous_scale='RdYlGn_r',
+        category_orders={'day': ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']} # Fixed category key
+    )
+    fig_heatmap.update_layout(xaxis_nticks=24, template='plotly_dark')
+    st.plotly_chart(fig_heatmap, use_container_width=True)
+
+st.markdown('--------------')
