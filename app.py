@@ -26,15 +26,16 @@ def get_engine():
 
 @st.cache_data(ttl=0)
 def fetch_alerts_data():
-    engine = get_engine
+    engine = get_engine()
     query = "SELECT * FROM alerts"
     query1 = "SELECT * FROM devices"
     query2 = "SELECT * FROM zones"
     query3 = "SELECT * FROM floors"
-    alert_df = pd.read_sql(query,engine)
-    device_df = pd.read_sql(query1,engine)
-    zones_df = pd.read_sql(query2,engine)
-    floor_df = pd.read_sql(query3,engine)
+    with engine.connect() as conn:
+      alert_df = pd.read_sql(query,engine)
+      device_df = pd.read_sql(query1,engine)
+      zones_df = pd.read_sql(query2,engine)
+      floor_df = pd.read_sql(query3,engine)
 
     alert_df["created_at"] = pd.to_datetime(alert_df["created_at"])
     alert_df["hour"] = alert_df["created_at"].dt.hour
