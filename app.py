@@ -13,11 +13,11 @@ st.set_page_config(page_title="Indoor Navigation Analytics",
 st.title("🛰️ Indoor Navigation And Asset Tracking")
 st.markdown("------------------")
 
-DB_USER = st.secrets[DB_USER]
-DB_PASS = urllib.parse.quote_plus(st.secrets[DB_PASS])
-DB_HOST = st.secrets[DB_HOST]
-DB_PORT = st.secrets[DB_PORT]
-DB_NAME = st.secrets[DB_NAME]
+DB_USER = st.secrets["DB_USER"]
+DB_PASS = urllib.parse.quote_plus(st.secrets["DB_PASS"])
+DB_HOST = st.secrets["DB_HOST"]
+DB_PORT = st.secrets["DB_PORT"]
+DB_NAME = st.secrets["DB_NAME"]
 
 @st.cache_resource
 def get_engine():
