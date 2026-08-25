@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from sqlalchemy import create_engine
-from urllib.parse
+import urllib.parse
 
 #page
 st.set_page_config(page_title="Indoor Navigation Analytics",
